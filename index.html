@@ -18,7 +18,7 @@
       };
 
       socket.onmessage = function (event) {
-        console.log(event.data);
+        console.log(`收到服务端消息: ${event.data}`);
       };
       function send() {
         let value = text.value;

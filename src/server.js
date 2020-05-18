@@ -5,7 +5,7 @@ const wsServer = new Server({ port: 8888 });
 wsServer.on('connection', (socket) => {
   // onmessage 监听客户端发过来的消息
   socket.on('message', (message) => {
-    console.log(message);
+    console.log(`收到客户端消息：${message}`);
     socket.send(message);
   });
 });
