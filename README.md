@@ -15,7 +15,7 @@
 ### 258EAFA5-E914-47DA-95CA-C5AB0DC85B11
 
 * GUID `258EAFA5-E914-47DA-95CA-C5AB0DC85B11`
-  * 凭什么是这个code？
+  * 凭什么是GUID？
     * 这是一个 `Pre Shared Key`，大家提前双方约定的
   * 具体使用：**`Sec-WebSocket-Accept = base64(sha1(sec-websocket-key + 258EAFA5-E914-47DA-95CA-C5AB0DC85B11))`**
   * 具体实现:
@@ -41,4 +41,23 @@ function unmask(buffer, mask) {
     buffer[i] ^= mask[i % 4];
   }
 }
+```
+
+### 升级协议
+
+```js
+upgradeProtocol = (socket, chunk) => {
+  let rows = chunk.split('\r\n');
+  let headers = toHeaders(rows.slice(1, -2));
+  let wsKey = headers['Sec-WebSocket-Key'];
+  let acceptKey = toAcceptKey(wsKey);
+  let response = [
+    'HTTP/1.1 101 Switching Protocols',
+    'Upgrade: websocket',
+    'Connection: Upgrade',
+    `Sec-WebSocket-Accept: ${acceptKey}`,
+    '\r\n',
+  ].join('\r\n');
+  socket.write(response);
+};
 ```
